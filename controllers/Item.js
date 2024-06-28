@@ -240,53 +240,17 @@ exports.updateItem = async (req, res) => {
   };
   
 
-  exports.deleteItem = async (req, res) => {
+exports.deleteItem = async (req, res) => {
     try {
         const { id } = req.params;
-        const item = await Item.findById(id);
-      
+        const deletedItem = await Item.findByIdAndDelete(id);
 
-        if (!item) {
+        if (!deletedItem) {
             return res.status(404).json({
                 success: false,
                 message: "Item not found",
             });
         }
-
-        // Extract Public IDs from URLs
-        const extractPublicId = (url, resourceType) => {
-            const parts = url.split('/');
-            const filename = parts.pop();
-            const folder = parts.slice(parts.indexOf(resourceType) + 1, -1).join('/');
-            return `${folder}/${filename.split('.')[0]}`;
-        };
-
-        const imagePublicId = extractPublicId(item.image, 'image');
-        const videoPublicId = extractPublicId(item.video, 'video');
-       
-
-        // Delete image if exists
-        if (imagePublicId) {
-            try {
-                const result = await cloudinary.uploader.destroy(imagePublicId, { resource_type: 'image' });
-              
-            } catch (err) {
-                console.error(err, 'Error deleting image from Cloudinary');
-            }
-        }
-
-        // Delete video if exists
-        if (videoPublicId) {
-            try {
-                const result = await cloudinary.uploader.destroy(videoPublicId, { resource_type: 'video' });
-              
-            } catch (err) {
-                console.error(err, 'Error deleting video from Cloudinary');
-            }
-        }
-
-        // Delete item from the database
-        const deletedItem = await Item.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,
@@ -299,6 +263,6 @@ exports.updateItem = async (req, res) => {
             success: false,
             message: "Failed to delete item",
             error: error.message,
-        });
-    }
-};
+        });
+    }
+}
