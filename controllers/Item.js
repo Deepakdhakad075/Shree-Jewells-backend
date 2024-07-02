@@ -10,7 +10,7 @@ exports.createItem = async (req, res) => {
         const {
             itemName,
             grossWeight,
-            netGoldWeight,
+            
             goldRate,
             roundDiamondWeight,
             roundDiamondRate,
@@ -57,7 +57,7 @@ exports.createItem = async (req, res) => {
             itemName,
             category,
             grossWeight,
-            netGoldWeight,
+          
             goldRate,
             roundDiamondWeight,
             roundDiamondRate,
