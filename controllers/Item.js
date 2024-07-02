@@ -3,89 +3,85 @@ const cloudinary = require("cloudinary").v2;
 const Item = require("../models/Item");
 const { uploadImageToCloudinary, uploadVideoToCloudinary } = require("../utils/imageUploader");
 
-
 exports.createItem = async (req, res) => {
-    try {  
-      
-        const {
-            itemName,
-            grossWeight,
-            
-            goldRate,
-            roundDiamondWeight,
-            roundDiamondRate,
-            polkiDiamondWeight,
-            polkiDiamondRate,
-            stoneWeight,
-            stoneType,
-            stoneRate,
-            laborCharge,
-            totalRate,
-            category
-        } = req.body;
+  try {
+    const {
+      itemName,
+      grossWeight,
+      goldRate,
+      roundDiamondWeight,
+      roundDiamondRate,
+      polkiDiamondWeight,
+      polkiDiamondRate,
+      stoneWeight,
+      stoneType,
+      stoneRate,
+      laborCharge,
+      totalRate,
+      category,
+    } = req.body;
 
-        const image = req.files && req.files.image;
-        const video = req.files && req.files.video;
+    const image = req.files && req.files.image;
+    const video = req.files && req.files.video;
 
-        if (
-            !itemName ||
-            !grossWeight ||
-         
-            !goldRate ||
-            !roundDiamondWeight ||
-            !roundDiamondRate ||
-            !polkiDiamondWeight ||
-            !polkiDiamondRate ||
-            !stoneWeight ||
-            !stoneType ||
-            !stoneRate ||
-            !laborCharge ||
-            !totalRate ||
-            !image ||
-            !category
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "All Fields are Mandatory",
-            });
-        }
-
-        const uploadedImage = await uploadImageToCloudinary(image, process.env.FOLDER_NAME, 1000, 1000);
-        const uploadedVideo = video ? await uploadVideoToCloudinary(video, process.env.FOLDER_NAME) : null;
-
-        const newItem = await Item.create({
-            itemName,
-            category,
-            grossWeight,
-          
-            goldRate,
-            roundDiamondWeight,
-            roundDiamondRate,
-            polkiDiamondWeight,
-            polkiDiamondRate,
-            stoneWeight,
-            stoneType,
-            stoneRate,
-            laborCharge,
-            totalRate,
-            image: uploadedImage.secure_url,
-            video: uploadedVideo ? uploadedVideo.secure_url : null,
-        });
-
-        res.status(201).json({
-            success: true,
-            data: newItem,
-            message: "Item Created Successfully",
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to create item",
-            error: error.message,
-        });
+    if (
+      !itemName ||
+      !grossWeight ||
+      !goldRate ||
+      !roundDiamondWeight ||
+      !roundDiamondRate ||
+      !polkiDiamondWeight ||
+      !polkiDiamondRate ||
+      !stoneWeight ||
+      !stoneType ||
+      !stoneRate ||
+      !laborCharge ||
+      !totalRate ||
+      !image ||
+      !category
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All Fields are Mandatory",
+      });
     }
-}
+
+    const uploadedImage = await uploadImageToCloudinary(image, process.env.FOLDER_NAME, 1000, 1000);
+    const uploadedVideo = video ? await uploadVideoToCloudinary(video, process.env.FOLDER_NAME) : null;
+
+    const newItem = await Item.create({
+      itemName,
+      category,
+      grossWeight,
+      goldRate,
+      roundDiamondWeight,
+      roundDiamondRate,
+      polkiDiamondWeight,
+      polkiDiamondRate,
+      stoneWeight,
+      stoneType,
+      stoneRate,
+      laborCharge,
+      totalRate,
+      image: uploadedImage.secure_url,
+      video: uploadedVideo ? uploadedVideo.secure_url : null,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: newItem,
+      message: "Item Created Successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create item",
+      error: error.message,
+    });
+  }
+};
+
 
 exports.getItems = async (req, res) => {
     try {
