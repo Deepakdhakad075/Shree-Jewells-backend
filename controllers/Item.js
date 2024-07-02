@@ -30,7 +30,7 @@ exports.createItem = async (req, res) => {
         if (
             !itemName ||
             !grossWeight ||
-            !netGoldWeight ||
+         
             !goldRate ||
             !roundDiamondWeight ||
             !roundDiamondRate ||
